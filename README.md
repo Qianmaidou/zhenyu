@@ -228,3 +228,46 @@ GET  /api/meta/stats|sources|gallery
 | 所有专业内容未经顾问确认 | 不能作为专业依据 | 前台逐处标注，后台提供确认流程 |
 | 积分与社区无行为风控 | 可被脚本刷分 | 仅有每日上限与幂等，生产前需补设备指纹与限流 |
 | 后台无 CRUD 与图表 | 仅够演示审核闭环 | 按需再做，避免过度设计 |
+
+---
+
+## 8. 团队协作
+
+### 8.1 仓库与远端
+
+- 远端：<https://github.com/Qianmaidou/zhenyu>（私有仓库，`main` 为默认分支）
+- 克隆：`git clone https://github.com/Qianmaidou/zhenyu.git`
+- 提交与推送：默认由成员本人执行（`git add` → `git commit` → `git push`）；命令行已装 `gh`，可用 `gh pr create` 直接开 PR。
+
+### 8.2 首次拉取后跑起来
+
+```bash
+cd zhenyu/backend
+python -m venv .venv && .venv/Scripts/activate      # Windows；macOS/Linux 用 .venv/bin/activate
+pip install -r requirements.txt
+python run.py init                                   # 建库 + 装载种子（数据不入库，各自生成）
+python run.py serve --port 8130
+```
+
+Windows 也可以直接双击仓库根目录的 `start.cmd`：默认以局域网模式启动并自动打开浏览器；只想本机可见时执行 `start.cmd 1`。
+
+### 8.3 分支与评审
+
+- `main` 只接受通过评审的改动；日常开发从 `main` 切出 `feat/xxx`、`fix/xxx`，完成后开 PR。
+- 改动前端样式或文案后本地刷新验证；接口改动需同步更新 `backend/tests/test_smoke.py`。
+- 合并前自检：`python run.py check`（数据与合规自检）、`python -m pytest backend/tests`（冒烟测试）。
+
+### 8.4 数据与代码的边界
+
+| 内容 | 是否入仓库 | 说明 |
+|---|---|---|
+| `backend/app/data/seed_*.json` | 入库 | 种子数据，队友 `run.py init` 即可得到同一份内容 |
+| `data/zhenyu.db` | 不入库 | SQLite 单写者，不能跨机共享；每人一份本地库 |
+| `data/storage/` | 不入库 | 生成图与元数据等运行产物 |
+| `backend/.env` | 不入库 | 本地配置与密钥，仓库只保留 `.env.example` |
+
+### 8.5 局域网演示
+
+`python run.py serve --host 0.0.0.0 --port 8130` 后，同一 Wi-Fi 下的同事访问 `http://<你的局域网IP>:8130/`。
+注意：这样会把体验账号与后台页暴露给同网段成员，仅用于内网演示；对外分享请用发布工具或部署到服务器。
+
