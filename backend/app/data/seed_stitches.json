@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "note": "全部条目的 review_status 默认为 pending_expert，须经湘绣顾问确认后前台才显示为「已确认」。",
+  "stitches": [
+    {
+      "code": "pengmao",
+      "name": "鬅毛针",
+      "alias": "蓬毛针",
+      "family": "湘绣特色针法",
+      "difficulty": 5,
+      "summary": "湘绣最具代表性的针法之一，专为表现狮、虎、猫一类动物的毛发而发展出来。做法是先用较粗丝线按毛发生长方向铺出走向，再以极细丝线层层叠加、逐层错针并不断加重或提亮，使毛丝呈现蓬松、有厚度、能「立起来」的体积感。",
+      "suitable_for": "动物毛发、鸟禽羽毛、绒面与毛发边缘的碎毛处理",
+      "steps": ["按毛发生长走向把绣面分区，标出主要的「水路」方向", "第一层用略粗丝线、较长针脚铺出底色与走向", "后续每层改用更细丝线，逐层错开针脚，避免形成规则网格", "在明暗交界处以邻近色反复掺入，制造体积", "最后用最细的一两丝梳理边缘碎毛，衔接背景"],
+      "tips": "层与层必须错针；同向叠针会让毛发像贴纸一样平掉。",
+      "sources": [{"title": "中文维基百科 · 湘绣", "url": "https://zh.wikipedia.org/wiki/湘绣"}]
+    },
+    {
+      "code": "canzhen",
+      "name": "掺针",
+      "alias": "长短针、接针",
+      "family": "平绣类",
+      "difficulty": 4,
+      "summary": "湘绣处理色彩过渡的核心针法。以长短相间的针脚，由深至浅或由浅至深逐层掺入相邻色块，使两色之间没有明显界线，形成柔和的晕色效果，业内常把这种能力称为「和色」。",
+      "suitable_for": "花瓣的明暗、衣料褶皱、天空与水的渐变、任何需要过渡的区域",
+      "steps": ["先确定由深到浅的色阶顺序", "第一排用长短交替的针脚打底，边界刻意做不齐", "下一排针脚嵌入上一排的空隙，颜色向下一个色阶过渡", "反复掺换至目标色，最后整体微调"],
+      "tips": "色阶跨度大时要多设中间色，宁可多加两三个过渡色。",
+      "sources": [{"title": "中文维基百科 · 湘绣", "url": "https://zh.wikipedia.org/wiki/湘绣"}]
+    },
+    {
+      "code": "youzhen",
+      "name": "游针",
+      "alias": "",
+      "family": "线条类",
+      "difficulty": 3,
+      "summary": "用于勾勒流畅转折的线条。针脚短而连贯，随形状走势游走，能把叶脉、水波、云纹、衣褶等弧线交代清楚。湘绣讲究「以针代笔」，游针承担的正是毛笔中锋线条的角色。",
+      "suitable_for": "轮廓线、叶脉、水波纹、云纹、人物衣褶",
+      "steps": ["先用极淡的线稿确定走势", "按走势分小段连续下针，每段之间不留断口", "弧度大的地方缩短针脚，保证线条圆顺", "收尾时使线条由粗渐细自然收针"],
+      "tips": "遇到直绷绷的长线要主动分段，避免松弛起拱。",
+      "sources": [{"title": "中文维基百科 · 刺绣", "url": "https://zh.wikipedia.org/wiki/刺绣"}]
+    },
+    {
+      "code": "qizhen",
+      "name": "齐针",
+      "alias": "",
+      "family": "平绣类",
+      "difficulty": 2,
+      "summary": "最基础的平绣针法。针脚整齐平行排列，起针落针都压在同一条边界线上，用来铺设大面积的均匀色块。湘绣多数复杂针法都是在齐针排线的基础上再作变化。",
+      "suitable_for": "铺底、大面积纯色块、边框与填地",
+      "steps": ["沿轮廓一侧起针并排下针", "保持针距一致、方向一致", "边缘务必整齐，这是齐针唯一的评判标准", "需要渐变时再在其上改用掺针"],
+      "tips": "大面积齐针容易拉紧起皱，可先绷好绣架再下针。",
+      "sources": [{"title": "中文维基百科 · 刺绣", "url": "https://zh.wikipedia.org/wiki/刺绣"}]
+    },
+    {
+      "code": "dazizhen",
+      "name": "打籽针",
+      "alias": "打子针",
+      "family": "结绣类",
+      "difficulty": 3,
+      "summary": "把线在针上绕数圈后回刺布面，形成一粒粒突出的小结。颗粒感强、触手有凸点，常被用来表现花蕊、果实表面或任何点状肌理。",
+      "suitable_for": "花心花蕊、果实斑点、禽鸟羽毛的眼斑",
+      "steps": ["针自布面穿出并留出线尾", "线在针尖绕两到三圈", "在出针点旁极近处重新入针，拉紧形成小结", "重复排布，控制间距一致"],
+      "tips": "绕圈数与拉紧力度决定颗粒大小，务必保持一致。",
+      "sources": [{"title": "中文维基百科 · 刺绣", "url": "https://zh.wikipedia.org/wiki/刺绣"}]
+    },
+    {
+      "code": "wangxiu",
+      "name": "网绣",
+      "alias": "网针",
+      "family": "网绣类",
+      "difficulty": 4,
+      "summary": "先用线在绣面上搭出规则的网格作为骨架，再在网格交点处加绣别的针法。因为底纹呈网状，特别适合表现有规律重复的结构，如鱼鳞、甲片、编织物。",
+      "suitable_for": "鱼鳞、甲胄纹样、编织质感、装饰底纹",
+      "steps": ["按等距打出第一组平行线作为经", "压过它以同样间距打出第二组作为纬", "在交点用细线固定，形成稳定网格", "再在网格上按需要进行加绣或填色"],
+      "tips": "网格歪斜会立刻被眼睛看出，建议先用粉线定格。",
+      "sources": [{"title": "中文维基百科 · 刺绣", "url": "https://zh.wikipedia.org/wiki/刺绣"}]
+    },
+    {
+      "code": "dingxian",
+      "name": "钉线绣",
+      "alias": "压线绣",
+      "family": "辅助针法",
+      "difficulty": 3,
+      "summary": "用一根较粗的线（或金银线）按需要的纹样铺在布面，再用同色细线横向把它一段段钉牢。粗细对比强烈、轮廓硬朗，常用于勾边和器物纹样。",
+      "suitable_for": "轮廓勾边、金银线装饰、器物与服饰的图案框架",
+      "steps": ["把粗线按纹样铺好并临时固定", "用细线每隔一小段跨过粗线钉入布面", "转角处缩短钉距，保证轮廓服帖", "末端将粗线藏入背面"],
+      "tips": "钉距不均会让粗线浮起，转角是关键。",
+      "sources": [{"title": "中文维基百科 · 刺绣", "url": "https://zh.wikipedia.org/wiki/刺绣"}]
+    }
+  ],
+  "rules": [
+    {"feature_key": "fur", "feature_label": "毛发质感", "keywords": ["毛发质感", "毛茸茸", "绒毛", "虎", "狮", "猫", "兽", "毛"], "stitch_code": "pengmao", "weight": 2.0, "rationale": "表现蓬松且有厚度的毛丝，首选湘绣特色的鬅毛针逐层错针叠加"},
+    {"feature_key": "gradient", "feature_label": "色彩渐变", "keywords": ["色彩渐变", "过渡", "晕色", "层次", "渐变", "夕阳", "天空"], "stitch_code": "canzhen", "weight": 1.6, "rationale": "相邻色块之间需要无接缝的过渡，掺针的长短交替最能胜任"},
+    {"feature_key": "outline", "feature_label": "轮廓线条", "keywords": ["轮廓线条", "轮廓", "勾边", "描线", "线条感", "白描"], "stitch_code": "youzhen", "weight": 1.4, "rationale": "需要连贯且有转折能力的线，游针相当于毛笔的中锋线条"},
+    {"feature_key": "petal", "feature_label": "花瓣与叶面", "keywords": ["花叶造型", "花瓣", "牡丹", "荷", "梅", "兰", "菊", "叶子"], "stitch_code": "canzhen", "weight": 1.3, "rationale": "花瓣明暗要在极小面积内完成过渡，掺针比齐针更自然"},
+    {"feature_key": "flat", "feature_label": "大面积色块", "keywords": ["大色块", "底色", "纯色", "铺底", "平整"], "stitch_code": "qizhen", "weight": 1.1, "rationale": "均匀色块追求整齐而非过渡，齐针排线效率最高"},
+    {"feature_key": "expression", "feature_label": "传神细节", "keywords": ["传神细节", "眼睛", "神态", "瞳孔", "生动"], "stitch_code": "youzhen", "weight": 1.2, "rationale": "眼、口等关键处需要极短且可控的针脚来收形"},
+    {"feature_key": "dot", "feature_label": "点状肌理", "keywords": ["点状肌理", "花心", "花蕊", "颗粒", "斑点", "颗粒感"], "stitch_code": "dazizhen", "weight": 1.3, "rationale": "颗粒凸点用打籽针最为贴切"},
+    {"feature_key": "scale", "feature_label": "编织鳞片", "keywords": ["鱼鳞", "铠甲", "编织", "网格", "鳞片"], "stitch_code": "wangxiu", "weight": 1.3, "rationale": "规则重复的几何结构以网绣打底再加工"},
+    {"feature_key": "metal", "feature_label": "金银勾勒", "keywords": ["金线", "银线", "盘金", "金属感", "勾边"], "stitch_code": "dingxian", "weight": 1.1, "rationale": "金属线与粗线需要被细线压牢，属于钉线绣的典型用法"},
+    {"feature_key": "animal", "feature_label": "走兽题材", "keywords": ["老虎", "狮子", "猫狗", "走兽", "动物"], "stitch_code": "pengmao", "weight": 1.8, "rationale": "湘绣狮虎题材的传统解法即以鬅毛针建构体积"},
+    {"feature_key": "bird", "feature_label": "禽鸟羽毛", "keywords": ["鸟", "鹤", "孔雀", "羽毛", "禽"], "stitch_code": "canzhen", "weight": 1.2, "rationale": "羽毛的色带变化多为渐变，可用掺针分层处理"},
+    {"feature_key": "figure", "feature_label": "人物题材", "keywords": ["人物", "仕女", "肖像", "人像", "姑娘"], "stitch_code": "canzhen", "weight": 1.0, "rationale": "面部与服饰明暗细腻，通常需要掺针配合短针脚"}
+  ]
+}

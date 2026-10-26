@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>个人中心 · 针语</title>
+<link rel="stylesheet" href="/assets/theme.css?v=3">
+</head>
+<body data-page="me">
+<main class="container">
+  <h1 class="page-title">个人中心</h1>
+
+  <div id="auth" class="grid-2" style="align-items:start">
+    <section class="card">
+      <h3>登录</h3>
+      <div class="field"><label>邮箱</label><input id="li-email" class="input" type="email" value="demo@zhenyu.dev"></div>
+      <div class="field"><label>密码</label><input id="li-pwd" class="input" type="password" value="zhenyu123"></div>
+      <button id="li-btn" class="btn btn-primary" style="width:100%">登录</button>
+      <p class="hint">体验账号已填入，可直接登录。</p>
+    </section>
+    <section class="card">
+      <h3>注册</h3>
+      <div class="field"><label>昵称</label><input id="rg-nick" class="input" placeholder="例如：绣针小白"></div>
+      <div class="field"><label>邮箱</label><input id="rg-email" class="input" type="email"></div>
+      <div class="field"><label>密码</label><input id="rg-pwd" class="input" type="password" placeholder="至少 8 位"></div>
+      <button id="rg-btn" class="btn btn-outline" style="width:100%">注册并领取 50 积分</button>
+    </section>
+  </div>
+
+  <section id="profile" style="display:none">
+    <div class="card" style="margin-bottom:24px">
+      <div class="row-between">
+        <div>
+          <h2 style="margin:0" id="nick"></h2>
+          <p class="small muted" style="margin:4px 0 0" id="role"></p>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:var(--t-3xl);font-weight:800;color:var(--c-primary)" id="points">0</div>
+          <div class="small muted">可用积分</div>
+        </div>
+      </div>
+      <div class="row" style="gap:8px;margin-top:16px;flex-wrap:wrap">
+        <button id="checkin" class="btn btn-primary btn-sm">每日签到 +5</button>
+        <button id="redeem" class="btn btn-outline btn-sm">10 积分兑换 1 次生成额度</button>
+        <button id="logout" class="btn btn-ghost btn-sm">退出登录</button>
+        <a class="btn btn-ghost btn-sm" href="/generate">去生成</a>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start">
+      <div class="card">
+        <h3 style="font-size:var(--t-base)">积分流水</h3>
+        <div id="ledger" class="small"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:var(--t-base)">我的生成记录</h3>
+        <div id="gens" class="small"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="/assets/app.js?v=3"></script>
+<script>
+(function () {
+  const { api, esc, toast, fmtTime } = window.ZY;
+  window.ZY.renderChrome('/me');
+
+  function showProfile() {
+    api.get('/auth/me').then(u => {
+      document.getElementById('auth').style.display = 'none';
+      document.getElementById('profile').style.display = 'block';
+      document.getElementById('nick').textContent = u.nickname + '（' + u.email + '）';
+      document.getElementById('role').textContent =
+        ({ user: '普通用户', reviewer: '内容顾问', admin: '管理员' })[u.role] + ` · 剩余 ${u.quota_free} 次生成机会`;
+      document.getElementById('points').textContent = u.points;
+      loadLedger(); loadGens();
+    }).catch(() => {
+      document.getElementById('auth').style.display = 'grid';
+      document.getElementById('profile').style.display = 'none';
+    });
+  }
+
+  function loadLedger() {
+    api.get('/points/ledger', { limit: 30 }).then(d => {
+      document.getElementById('ledger').innerHTML = d.items.length
+        ? d.items.map(r => `<div class="list-item"><div class="row-between">
+            <span>${esc(r.reason_text)}</span>
+            <strong style="color:${r.delta > 0 ? 'var(--c-success)' : 'var(--c-danger)'}">${r.delta > 0 ? '+' : ''}${r.delta}</strong>
+          </div><div class="muted small">余额 ${r.balance_after} · ${fmtTime(r.created_at)}</div></div>`).join('')
+        : '<p class="muted">还没有积分记录，先去签到。</p>';
+    }).catch(() => {});
+  }
+
+  function loadGens() {
+    api.get('/generate', { limit: 12 }).then(d => {
+      document.getElementById('gens').innerHTML = d.items.length
+        ? d.items.map(g => `<div class="list-item">
+            <div class="row-between"><span>${esc(g.prompt.slice(0, 26))}${g.prompt.length > 26 ? '…' : ''}</span>
+            <span class="badge">${g.status === 'succeeded' ? '成功' : g.status}</span></div>
+            <div class="muted small">针法建议：${(g.suggestions || []).map(s => esc(s.name)).join(' / ') || '暂无'} · ${fmtTime(g.created_at)}</div>
+          </div>`).join('')
+        : '<p class="muted">还没有生成记录。</p>';
+    }).catch(() => {});
+  }
+
+  document.getElementById('li-btn').addEventListener('click', () => {
+    api.post('/auth/login', {
+      email: document.getElementById('li-email').value.trim(),
+      password: document.getElementById('li-pwd').value
+    }).then(d => { api.setAuth(d.token, d.user); toast('登录成功', 'success'); showProfile(); })
+      .catch(e => toast(e.message, 'error'));
+  });
+
+  document.getElementById('rg-btn').addEventListener('click', () => {
+    api.post('/auth/register', {
+      email: document.getElementById('rg-email').value.trim(),
+      nickname: document.getElementById('rg-nick').value.trim(),
+      password: document.getElementById('rg-pwd').value
+    }).then(d => { api.setAuth(d.token, d.user); toast('注册成功', 'success'); showProfile(); })
+      .catch(e => toast(e.message, 'error'));
+  });
+
+  document.getElementById('logout').addEventListener('click', () => {
+    api.clearAuth(); location.reload();
+  });
+  document.getElementById('checkin').addEventListener('click', () => {
+    api.post('/points/checkin').then(d => { toast(d.text + '，当前 ' + d.balance, 'success'); showProfile(); })
+      .catch(e => toast(e.message, 'error'));
+  });
+  document.getElementById('redeem').addEventListener('click', () => {
+    api.post('/points/redeem-quota', { count: 1 })
+      .then(d => { toast(`兑换成功：剩余 ${d.quota} 次生成机会、${d.balance} 积分`, 'success'); showProfile(); })
+      .catch(e => toast(e.message, 'error'));
+  });
+
+  showProfile();
+})();
+</script>
+</body>
+</html>

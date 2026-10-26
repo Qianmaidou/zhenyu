@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  zhenyu:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: zhenyu/mvp:0.1.0
+    ports:
+      - "8130:8130"
+    environment:
+      ENV: dev
+      SECRET_KEY: ${SECRET_KEY:-zhenyu-dev-secret-change-me}
+      IMAGE_PROVIDER: ${IMAGE_PROVIDER:-mock}
+      IMAGE_API_URL: ${IMAGE_API_URL:-}
+      IMAGE_API_KEY: ${IMAGE_API_KEY:-}
+      DAILY_BUDGET_LIMIT: ${DAILY_BUDGET_LIMIT:-200}
+    volumes:
+      - zhenyu-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  zhenyu-data:
+
+# 说明：MVP 只用 SQLite + 本地存储，单容器即可跑。
+# 数据量增长后，把 DB_URL 指向下方注释里的 Postgres 服务即可，
+# 数据访问层已隔离在 backend/app/db/，无需改动业务代码。
+#
+#   db:
+#     image: pgvector/pgvector:pg16
+#     environment:
+#       POSTGRES_PASSWORD: example
+#       POSTGRES_DB: zhenyu
+#     volumes:
+#       - pg-data:/var/lib/postgresql/data
+#   then set DB_URL=postgresql+psycopg://postgres:example@db:5432/zhenyu

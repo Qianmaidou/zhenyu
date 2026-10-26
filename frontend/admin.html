@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>管理后台 · 针语</title>
+<link rel="stylesheet" href="/assets/theme.css?v=3">
+</head>
+<body data-page="admin">
+<main class="container">
+  <div class="row-between">
+    <h1 class="page-title m-0">管理后台</h1>
+    <span class="small muted" id="who"></span>
+  </div>
+  <p class="lead">审核内容，查看生成记录和管理操作。</p>
+
+  <div class="notice" style="margin-bottom:24px">
+    <span aria-hidden="true">🔒</span>
+    <div>请使用顾问或管理员账号登录。体验账号：reviewer@zhenyu.dev 或 admin@zhenyu.dev，密码均为 zhenyu123。</div>
+  </div>
+
+  <div id="login" class="card" style="display:none;margin-bottom:24px">
+    <div class="grid-2">
+      <div class="field"><label>邮箱</label><input id="email" class="input" value="admin@zhenyu.dev"></div>
+      <div class="field"><label>密码</label><input id="pwd" class="input" type="password" value="zhenyu123"></div>
+    </div>
+    <button id="login-btn" class="btn btn-primary">登录后台</button>
+  </div>
+
+  <div id="body" style="display:none">
+    <div class="grid-auto-sm" id="overview" style="margin-bottom:24px"></div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="row-between" style="margin-bottom:16px">
+        <h2 style="margin:0;font-size:var(--t-xl)">待顾问确认队列</h2>
+        <select id="target" class="select" style="width:auto">
+          <option value="knowledge">知识条目</option>
+          <option value="stitch">针法</option>
+          <option value="rule">针法规则</option>
+          <option value="work">社区作品</option>
+          <option value="comment">评论</option>
+        </select>
+      </div>
+      <div id="pending"></div>
+    </div>
+
+    <div class="grid-2" style="align-items:start">
+      <div class="card">
+        <h2 style="font-size:var(--t-xl)">生成记录与费用</h2>
+        <div id="gens"></div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:var(--t-xl)">操作记录</h2>
+        <div id="audit"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/assets/app.js?v=3"></script>
+<script>
+(function () {
+  const { api, esc, toast, fmtTime } = window.ZY;
+  window.ZY.renderChrome('/');
+
+  function needLogin() {
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('body').style.display = 'none';
+  }
+
+  function loadAll() {
+    api.get('/admin/overview').then(o => {
+      document.getElementById('who').textContent = '已登录';
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('body').style.display = 'block';
+      const cards = [
+        ['用户数', o.users], ['今日生成', o.generations_today],
+        ['今日失败', o.failed_today], ['今日费用', '¥' + o.cost_today],
+        ['平均耗时', (o.avg_latency_ms / 1000).toFixed(1) + ' 秒'],
+        ['待确认知识', o.pending.knowledge],
+        ['待确认针法', o.pending.stitches],
+        ['待确认作品', o.pending.works]
+      ];
+      document.getElementById('overview').innerHTML = cards.map(([k, v]) =>
+        `<div class="card card-tight"><div class="small muted">${k}</div>
+         <div style="font-size:var(--t-2xl);font-weight:800">${esc(v)}</div></div>`).join('');
+    }).catch(() => needLogin());
+    loadPending(); loadGens(); loadAudit();
+  }
+
+  function loadPending() {
+    const t = document.getElementById('target').value;
+    api.get('/admin/pending', { target: t, limit: 50 }).then(d => {
+      const el = document.getElementById('pending');
+      if (!d.items.length) { el.innerHTML = `<p class="muted">「${esc(d.label)}」已全部确认。</p>`; return; }
+      el.innerHTML = d.items.map(i => `
+        <div class="list-item row-between">
+          <div style="flex:1"><strong>${esc(i.title)}</strong></div>
+          <div class="row" style="gap:8px">
+            <button class="btn btn-primary btn-sm" data-ok="${i.id}">确认</button>
+            <button class="btn btn-ghost btn-sm" data-reject="${i.id}">驳回</button>
+          </div>
+        </div>`).join('');
+      el.querySelectorAll('[data-ok]').forEach(b => b.addEventListener('click', () => review(t, b.getAttribute('data-ok'), 'expert_confirmed')));
+      el.querySelectorAll('[data-reject]').forEach(b => b.addEventListener('click', () => review(t, b.getAttribute('data-reject'), 'rejected')));
+    }).catch(e => toast(e.message, 'error'));
+  }
+
+  function review(target, id, status) {
+    api.post('/admin/review', { target, id, status, note: '后台操作' })
+      .then(() => { toast(status === 'rejected' ? '已驳回' : '已确认', 'success'); loadAll(); })
+      .catch(e => toast(e.message, 'error'));
+  }
+
+  function loadGens() {
+    api.get('/admin/generations', { limit: 15 }).then(d => {
+      const el = document.getElementById('gens');
+      el.innerHTML = d.items.length ? `<table style="width:100%;font-size:var(--t-sm);border-collapse:collapse">
+        <tr class="muted"><th style="text-align:left">描述</th><th>生成方式</th><th>耗时</th><th>费用</th></tr>
+        ${d.items.map(g => `<tr><td>${esc(g.prompt)}</td><td>${g.provider === 'mock' || g.provider === 'api-fallback' ? '基础示意' : 'AI 生成'}</td><td>${(g.latency_ms / 1000).toFixed(1)} 秒</td><td>¥${g.cost_estimate}</td></tr>`).join('')}
+      </table><p class="small muted" style="margin-top:8px">以上记录费用合计 ¥${d.total_cost}</p>`
+        : '<p class="muted">暂无生成记录</p>';
+    }).catch(() => {});
+  }
+
+  function loadAudit() {
+    const ACTION = { expert_review: '内容审核', generation_failed: '生成失败', points_redeem: '积分兑换' };
+    const TARGET = { knowledge: '知识条目', stitch: '针法', rule: '针法规则', work: '社区作品', comment: '评论', generation: '生成记录', user: '用户' };
+    api.get('/admin/audit', { limit: 15 }).then(rows => {
+      const el = document.getElementById('audit');
+      el.innerHTML = rows.length ? rows.map(r =>
+        `<div class="list-item small"><div class="row-between"><strong>${esc(ACTION[r.action] || '系统操作')}</strong>
+         <span class="muted">${fmtTime(r.created_at)}</span></div>
+         <div class="muted">${esc(TARGET[r.target_type] || '内容')} · 操作人 ${esc(r.actor || '系统')}</div></div>`).join('')
+        : '<p class="muted">暂无操作记录</p>';
+    }).catch(() => {});
+  }
+
+  document.getElementById('target').addEventListener('change', loadPending);
+  document.getElementById('login-btn').addEventListener('click', () => {
+    api.post('/auth/login', {
+      email: document.getElementById('email').value.trim(),
+      password: document.getElementById('pwd').value
+    }).then(d => { api.setAuth(d.token, d.user); loadAll(); }).catch(e => toast(e.message, 'error'));
+  });
+
+  loadAll();
+})();
+</script>
+</body>
+</html>

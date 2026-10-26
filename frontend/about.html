@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>关于针语 · 内容与来源</title>
+<meta name="description" content="了解针语的内容来源、使用边界和创作标识。">
+<link rel="stylesheet" href="/assets/theme.css?v=3">
+</head>
+<body data-page="about">
+<main class="container-narrow">
+  <h1 class="page-title">关于针语</h1>
+  <p class="lead">了解内容来源、使用边界和创作标识。</p>
+
+  <section class="card" style="margin-bottom:24px">
+    <h2 style="font-size:var(--t-xl)">数据来源与许可</h2>
+    <div id="sources"></div>
+  </section>
+
+  <section class="card" style="margin-bottom:24px">
+    <h2 style="font-size:var(--t-xl)">使用须知</h2>
+    <ol class="small">
+      <li><strong>针法建议仅供学习参考。</strong>建议依据已收录的针法资料生成，未经顾问确认的内容会明确标注。</li>
+      <li><strong>生成图片不是实物绣品。</strong>图片带有 AI 生成标识，可用于沟通创意和预览效果。</li>
+      <li><strong>使用公开素材请遵守许可。</strong>素材的作者和许可以原件页面为准，使用时请保留来源信息。</li>
+    </ol>
+  </section>
+
+  <section class="card" style="margin-bottom:24px">
+    <h2 style="font-size:var(--t-xl)">内容边界</h2>
+    <ul class="small muted">
+      <li>部分专业内容仍在整理，未经顾问确认的信息仅供学习参考。</li>
+      <li>效果示意不能替代实际绣制，真实效果会受到针法、材料和手工差异影响。</li>
+      <li>社区内容代表作者个人观点；涉及 AI 辅助创作时，应如实注明。</li>
+      <li>公开素材可能暂时无法加载，请稍后重试或前往原件页面查看。</li>
+    </ul>
+  </section>
+</main>
+
+<script src="/assets/app.js?v=3"></script>
+<script>
+(function () {
+  const { api, esc } = window.ZY;
+  window.ZY.renderChrome('/');
+  api.get('/meta/sources').then(d => {
+    document.getElementById('sources').innerHTML = d.items.map(s => `
+      <div class="list-item small">
+        <strong>${esc(s.name)}</strong>
+        <div class="muted">内容用途：${esc(s.scope)}</div>
+        <div>许可：${esc(s.license)}</div>
+        <div class="muted">使用说明：${esc(s.note)}</div>
+      </div>`).join('');
+  }).catch(() => {
+    document.getElementById('sources').innerHTML = '<p class="muted small">来源信息暂时无法加载，请稍后刷新重试。</p>';
+  });
+})();
+</script>
+</body>
+</html>

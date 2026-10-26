@@ -1,0 +1,22 @@
+# 数据库与生成产物：不入库，每人各自 run.py init 生成
+data/*.db
+data/*.db-*
+data/*.bak*
+data/storage/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# 本地环境与密钥
+backend/.env
+.env
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

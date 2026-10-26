@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>湘绣效果预览 · 针语</title>
+<meta name="description" content="描述想要的画面，获得湘绣效果示意和有依据的针法建议。">
+<meta name="theme-color" content="#fbf7ef">
+<link rel="stylesheet" href="/assets/theme.css?v=3">
+</head>
+<body data-page="generate">
+<main class="wrap">
+  <h1 class="page-title">湘绣效果预览</h1>
+  <p class="lede mb-6">描述想要的画面，获得效果示意和针法建议。图片仅供创作参考，不是实物绣品。</p>
+
+  <div class="grid-2" style="align-items:start">
+
+    <!-- 左：输入 -->
+    <section class="card">
+      <div class="field">
+        <label for="prompt">你想绣什么？</label>
+        <textarea id="prompt" class="textarea" placeholder="例如：一只侧卧的老虎，暖黄色毛发，背景是深红色的渐变，整体要有厚重的毛绒质感"></textarea>
+        <p class="hint">写明题材、颜色和质感，建议会更准确。</p>
+      </div>
+
+      <div class="field">
+        <span class="label">快速试试</span>
+        <div id="examples" class="chip-row">
+          <button class="chip" type="button" data-p="一只卧虎，暖黄毛发，要有蓬松厚重的毛质感">卧虎 · 毛发质感</button>
+          <button class="chip" type="button" data-p="一朵盛开的红牡丹，花瓣由深红渐变到月白">牡丹 · 色彩渐变</button>
+          <button class="chip" type="button" data-p="白描荷花，强调流畅的轮廓线条与水波纹">荷花 · 轮廓线条</button>
+          <button class="chip" type="button" data-p="仕女侧影，衣纹流动，色彩层次丰富">人物 · 衣纹</button>
+        </div>
+      </div>
+
+      <div class="row-between mt-5">
+        <button id="btn-gen" class="btn btn-primary">生成效果图</button>
+        <span id="quota" class="tiny muted"></span>
+      </div>
+      <div id="gen-error" class="mt-3"></div>
+    </section>
+
+    <!-- 右：结果 -->
+    <section class="card" id="result-card">
+      <div id="placeholder" class="muted small">
+        <p>填写描述并点击「生成效果图」，结果会显示在这里。</p>
+      </div>
+
+      <div id="loading" style="display:none">
+        <div class="skel" style="height:320px"></div>
+        <p class="small muted mt-3">正在生成效果图，请稍候…</p>
+      </div>
+
+      <div id="result" style="display:none"></div>
+    </section>
+  </div>
+
+  <section id="recent-section" class="mt-10 mb-10" style="display:none">
+    <h2 style="font-size:var(--t-xl)">本次生成记录</h2>
+    <div id="recent" class="grid-auto-sm mt-4"></div>
+  </section>
+</main>
+
+<script src="/assets/app.js?v=3"></script>
+<script>
+(function () {
+  const { api, esc, toast, reviewBadge } = window.ZY;
+  window.ZY.renderChrome('/generate');
+
+  const btn = document.getElementById('btn-gen');
+  const input = document.getElementById('prompt');
+  const box = document.getElementById('result');
+  const loading = document.getElementById('loading');
+  const placeholder = document.getElementById('placeholder');
+  const errBox = document.getElementById('gen-error');
+  let recent = [];
+
+  document.getElementById('examples').addEventListener('click', e => {
+    const p = e.target.getAttribute('data-p');
+    if (p) { input.value = p; input.focus(); }
+  });
+
+  api.get('/generate/quota').then(q => {
+    document.getElementById('quota').innerHTML = `剩余 <strong>${q.quota_left}</strong> 次`;
+  }).catch(() => {});
+
+  btn.addEventListener('click', async () => {
+    const prompt = input.value.trim();
+    if (!prompt) { toast('请先写点什么', 'error'); input.focus(); return; }
+    errBox.innerHTML = '';
+    btn.disabled = true;
+    loading.style.display = 'block';
+    box.style.display = 'none';
+    placeholder.style.display = 'none';
+    try {
+      const g = await api.post('/generate', { prompt, source_kind: 'text' });
+      renderResult(g);
+      recent.unshift(g);
+      renderRecent();
+    } catch (e) {
+      errBox.innerHTML = `<div class="notice notice-error">${esc(e.message)}</div>`;
+      box.style.display = 'none';
+      placeholder.style.display = 'block';
+    } finally {
+      loading.style.display = 'none';
+      btn.disabled = false;
+    }
+  });
+
+  function renderResult(g) {
+    const img = g.images && g.images[0];
+    box.style.display = 'block';
+    box.innerHTML = `
+      ${img ? `
+        <div class="figure"><img src="${esc(img.url)}" alt="湘绣效果示意"></div>
+        <div class="chip-row mt-3">
+          <span class="badge badge-ai">${esc(img.visible_label)}</span>
+          ${g.is_simulation ? '<span class="badge badge-seed">基础效果示意</span>' : ''}
+        </div>
+        <div class="mt-4">
+          <a class="btn btn-ghost btn-sm" href="${esc(img.url)}" download>下载图片</a>
+        </div>` : '<p class="notice notice-error">本次未生成图片，请稍后重试。</p>'}
+
+      <h3 class="mt-8">推荐的针法</h3>
+      ${g.features.length ? `<p class="small muted mt-2">识别到的画面特征：</p><div class="chip-row mt-2">${g.features.map(f => `<span class="chip">${esc(f)}</span>`).join('')}</div>` : ''}
+
+      <div class="mt-4">
+      ${(g.suggestions || []).length ? g.suggestions.map(s => `
+        <div class="suggest">
+          <div class="row-between">
+            <div style="font-weight:600">${esc(s.name)} <span class="tiny muted">匹配度 ${(s.score * 100).toFixed(0)}%</span></div>
+            ${reviewBadge(s.review_status)}
+          </div>
+          <p class="card-body mt-2">${esc(s.rationale)}</p>
+          <div class="row gap-2 mt-3">
+            <a class="btn btn-outline btn-sm" href="/stitches">查看针法</a>
+            <button class="btn btn-ghost btn-sm" data-ask="${esc(s.name)}的要点是什么？">追问要点</button>
+          </div>
+        </div>`).join('')
+      : '<p class="notice">暂时没有合适的针法建议。可以补充颜色、质感等细节后再试，或到「知识问答」继续了解。</p>'}
+      </div>`;
+
+    box.querySelectorAll('[data-ask]').forEach(b => b.addEventListener('click', () => {
+      sessionStorage.setItem('zy_ask', b.getAttribute('data-ask'));
+      location.href = '/knowledge';
+    }));
+  }
+
+  function renderRecent() {
+    const sec = document.getElementById('recent-section');
+    if (!recent.length) return;
+    sec.style.display = 'block';
+    document.getElementById('recent').innerHTML = recent.slice(0, 6).map(g => {
+      const img = g.images && g.images[0];
+      return `<div class="card card-tight">
+        ${img ? `<div class="figure"><img src="${esc(img.url)}" alt="历史生成"></div>` : ''}
+        <div class="small mt-2">${esc(g.prompt.slice(0, 28))}…</div>
+        <div class="tiny muted">${(g.suggestions || []).map(s => esc(s.name)).join(' / ') || '无建议'}</div>
+        <button class="btn btn-ghost btn-sm mt-3" data-reload="${esc(g.prompt)}">使用这段描述</button>
+      </div>`;
+    }).join('');
+    sec.querySelectorAll('[data-reload]').forEach(b => b.addEventListener('click', () => {
+      input.value = b.getAttribute('data-reload');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }));
+  }
+})();
+</script>
+</body>
+</html>

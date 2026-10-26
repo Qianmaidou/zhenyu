@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>针语 · 湘绣灵感与针法学习</title>
+<meta name="description" content="描述湘绣灵感，预览效果、了解针法，学习有据可查的湘绣知识。">
+<meta name="theme-color" content="#fbf7ef">
+<link rel="stylesheet" href="/assets/theme.css?v=3">
+</head>
+<body data-page="home">
+<main>
+
+  <!-- 首屏：左文案 + 右绣绷视觉主体 -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">湘绣 · 灵感与技艺</span>
+        <h1>让每一针<br><em>都说得出缘由</em></h1>
+        <p class="lede">描述你的湘绣想法，查看效果示意，获得有依据的针法建议。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/generate">开始创作</a>
+          <a class="btn btn-outline btn-lg" href="/stitches">浏览针法</a>
+        </div>
+        <div class="hero-facts">
+          <div class="metrics" id="stats">
+            <div class="metric"><b>—</b><span>收录针法</span></div>
+            <div class="metric"><b>—</b><span>画面特征</span></div>
+            <div class="metric"><b>—</b><span>知识条目</span></div>
+            <div class="metric"><b>—</b><span>社区作品</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hoop-wrap">
+        <svg class="hoop-svg" viewBox="0 0 320 320" role="img" aria-label="绣绷示意图：木绷绷紧的绢面上绣有八瓣团花纹样">
+          <defs>
+            <radialGradient id="cloth" cx="42%" cy="36%" r="74%">
+              <stop offset="0%" stop-color="#fdf9f0"/>
+              <stop offset="62%" stop-color="#f4e9d5"/>
+              <stop offset="100%" stop-color="#e7d5b4"/>
+            </radialGradient>
+            <radialGradient id="frame" cx="34%" cy="28%" r="82%">
+              <stop offset="0%" stop-color="#b98f57"/>
+              <stop offset="52%" stop-color="#9d7440"/>
+              <stop offset="100%" stop-color="#755026"/>
+            </radialGradient>
+            <!-- 单瓣：由内向外收尖的叶形 -->
+            <path id="petal" d="M0 -7 C 19 -30 23 -78 0 -103 C -23 -78 -19 -30 0 -7 Z"/>
+          </defs>
+
+          <!-- 木绷 -->
+          <circle cx="160" cy="160" r="148" fill="none" stroke="url(#frame)" stroke-width="11.5"/>
+          <circle cx="160" cy="160" r="154" fill="none" stroke="#6f5128" stroke-width="1" opacity=".42"/>
+          <circle cx="160" cy="160" r="141.5" fill="none" stroke="#6f5128" stroke-width="1" opacity=".42"/>
+          <circle cx="160" cy="160" r="139" fill="none" stroke="#ffffff" stroke-width="1.5" opacity=".5"/>
+
+          <!-- 绷紧的绢面 -->
+          <circle cx="160" cy="160" r="139" fill="url(#cloth)"/>
+
+          <!-- 布纹：同心细线，暗示经绷紧的织物 -->
+          <g fill="none" stroke="#a8814a" stroke-width=".7" opacity=".3">
+            <circle cx="160" cy="160" r="57"/>
+            <circle cx="160" cy="160" r="97"/>
+            <circle cx="160" cy="160" r="130"/>
+          </g>
+
+          <!-- 八瓣团花：虚线描边模拟针步 -->
+          <g transform="translate(160 160)">
+            <g fill="#a8201a" fill-opacity=".06" stroke="#a8201a"
+               stroke-width="1.5" stroke-dasharray="4.5 2.6" stroke-linecap="round">
+              <use href="#petal"/>
+              <use href="#petal" transform="rotate(45)"/>
+              <use href="#petal" transform="rotate(90)"/>
+              <use href="#petal" transform="rotate(135)"/>
+              <use href="#petal" transform="rotate(180)"/>
+              <use href="#petal" transform="rotate(225)"/>
+              <use href="#petal" transform="rotate(270)"/>
+              <use href="#petal" transform="rotate(315)"/>
+            </g>
+            <!-- 花瓣主筋 -->
+            <g stroke="#a8201a" stroke-width=".9" opacity=".45" stroke-dasharray="3 2.2">
+              <line x1="0" y1="-14" x2="0" y2="-97"/>
+              <line x1="0" y1="-14" x2="0" y2="-97" transform="rotate(45)"/>
+              <line x1="0" y1="-14" x2="0" y2="-97" transform="rotate(90)"/>
+              <line x1="0" y1="-14" x2="0" y2="-97" transform="rotate(135)"/>
+              <line x1="0" y1="-14" x2="0" y2="-97" transform="rotate(180)"/>
+              <line x1="0" y1="-14" x2="0" y2="-97" transform="rotate(225)"/>
+              <line x1="0" y1="-14" x2="0" y2="-97" transform="rotate(270)"/>
+              <line x1="0" y1="-14" x2="0" y2="-97" transform="rotate(315)"/>
+            </g>
+            <!-- 花心 -->
+            <circle r="8.5" fill="#a8201a" fill-opacity=".85"/>
+            <circle r="15" fill="none" stroke="#a8201a" stroke-width="1.4"
+                    stroke-dasharray="3.2 2.4" opacity=".8"/>
+            <circle r="24" fill="none" stroke="#a8201a" stroke-width="1"
+                    stroke-dasharray="2.6 2.2" opacity=".45"/>
+          </g>
+        </svg>
+        <span class="hoop-tag">效果示意 · 非实物绣品</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 内容与图片说明 -->
+  <section class="section--tight" style="padding-top:var(--s-6)">
+    <div class="wrap">
+      <div class="notice notice-warn">
+        <span aria-hidden="true">§</span>
+        <div>专业内容会标注审核状态；AI 图片均为效果示意，不是实物绣品。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 三步使用路径 -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">使用方式</span>
+        <h2>从灵感到针法，只需三步</h2>
+      </div>
+      <div class="grid-auto">
+        <article class="card card--hover step">
+          <span class="step-num" aria-hidden="true">一</span>
+          <h3 class="card-title">描述你的想法</h3>
+          <p class="card-body mt-2">写下题材、颜色和质感，越具体，针法建议越有针对性。</p>
+        </article>
+        <article class="card card--hover step">
+          <span class="step-num" aria-hidden="true">二</span>
+          <h3 class="card-title">查看效果与建议</h3>
+          <p class="card-body mt-2">获得效果示意和针法建议，并了解推荐理由。</p>
+        </article>
+        <article class="card card--hover step">
+          <span class="step-num" aria-hidden="true">三</span>
+          <h3 class="card-title">继续学习与练习</h3>
+          <p class="card-body mt-2">查看操作要点、资料来源和相关问答，再开始练习。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 本周针法练习 -->
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <span class="eyebrow">每周一针</span>
+          <h2>本周针法练习</h2>
+        </div>
+        <span id="weekly-badge"></span>
+      </div>
+      <div class="card" id="weekly">
+        <p class="muted small">加载中…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 公开素材库 -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <span class="eyebrow">灵感素材</span>
+          <h2>公开素材库</h2>
+        </div>
+        <a class="small" href="/about">来源与许可 →</a>
+      </div>
+      <p class="lede mb-6">浏览公开织绣素材，查看原件、作者与许可信息。</p>
+      <div class="grid-auto-sm" id="gallery"></div>
+      <p class="hint" id="gallery-note"></p>
+    </div>
+  </section>
+
+  <!-- 社区精选 -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">绣友分享</span>
+        <h2>社区精选</h2>
+        <p class="lede">欣赏编辑精选的社区作品，发现更多创作灵感。</p>
+      </div>
+      <div class="grid-auto" id="featured"></div>
+    </div>
+  </section>
+
+  <!-- 收尾 CTA -->
+  <section class="section">
+    <div class="wrap-prose center">
+      <h2>从一个想法开始</h2>
+      <p class="lede mt-3">写下你的第一个湘绣想法，看看它能变成什么样。</p>
+      <div class="hero-actions" style="justify-content:center">
+        <a class="btn btn-primary btn-lg" href="/generate">开始生成</a>
+        <a class="btn btn-ghost btn-lg" href="/about">了解内容与来源</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="/assets/app.js?v=3"></script>
+<script>
+(function () {
+  const { api, esc, reviewBadge } = window.ZY;
+  window.ZY.renderChrome('/');
+
+  api.get('/meta/stats').then(s => {
+    const items = [
+      [s.stitches, '收录针法'],
+      [s.rules, '画面特征'],
+      [s.knowledge, '知识条目'],
+      [s.works, '社区作品']
+    ];
+    document.getElementById('stats').innerHTML = items
+      .map(([v, l]) => `<div class="metric"><b>${esc(v)}</b><span>${esc(l)}</span></div>`)
+      .join('');
+  }).catch(() => {});
+
+  api.get('/meta/weekly').then(w => {
+    if (!w) return;
+    document.getElementById('weekly-badge').innerHTML = reviewBadge(w.review_status);
+    document.getElementById('weekly').innerHTML = `
+      <div class="row-between">
+        <h3 class="m-0">${esc(w.name)}</h3>
+        <span class="badge">难度 ${'★'.repeat(w.difficulty)}${'☆'.repeat(5 - w.difficulty)}</span>
+      </div>
+      <p class="card-body mt-3">${esc(w.summary)}</p>
+      <ol class="small dim mt-3" style="padding-left:1.2rem">${(w.steps || []).map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+      <div class="mt-5"><a class="btn btn-outline btn-sm" href="/stitches">查看完整针法</a></div>`;
+  }).catch(() => { document.getElementById('weekly').innerHTML = '<p class="muted small">暂时无法加载，请稍后刷新重试。</p>'; });
+
+  api.get('/meta/gallery', { limit: 8 }).then(g => {
+    const box = document.getElementById('gallery');
+    document.getElementById('gallery-note').textContent = g.notice || '';
+    if (!g.items.length) {
+      box.outerHTML = '<div class="empty">暂无公开素材，请稍后再来看看。</div>';
+      return;
+    }
+    box.innerHTML = g.items.map(a => `
+      <figure class="card card-flush card--hover m-0">
+        <div class="figure figure--square" style="border:0;border-radius:0">
+          <img loading="lazy" src="${esc(a.url)}" alt="${esc(a.title)}">
+        </div>
+        <figcaption class="figure-cap">
+          <div class="nowrap" style="font-weight:600;color:var(--c-text);overflow:hidden;text-overflow:ellipsis">${esc(a.title.slice(0, 46))}</div>
+          <div class="row-between" style="gap:6px;margin-top:4px">
+            <span class="tiny">${esc(a.license)}</span>
+            ${a.page_url ? `<a class="tiny" target="_blank" rel="noopener" href="${esc(a.page_url)}">原件 ↗</a>` : ''}
+          </div>
+        </figcaption>
+      </figure>`).join('');
+  }).catch(() => {});
+
+  api.get('/works', { sort: 'like', limit: 3 }).then(d => {
+    const featured = d.items.filter(w => w.is_featured);
+    const list = (featured.length ? featured : d.items).slice(0, 3);
+    document.getElementById('featured').innerHTML = list.map(w => `
+      <article class="card card--hover">
+        <div class="cover-strip" style="background:${esc(w.cover)}"></div>
+        <div class="row-between">
+          <h3 class="card-title m-0">${esc(w.title)}</h3>${reviewBadge(w.review_status)}
+        </div>
+        <p class="card-body mt-2">${esc(w.description.slice(0, 90))}</p>
+        <div class="row gap-4 tiny muted mt-4">
+          <span>♡ ${w.like_count}</span><span>☆ ${w.fav_count}</span><span>✎ ${w.comment_count}</span>
+          ${w.source_type === 'ai_assisted' ? '<span class="badge badge-ai">AI 辅助</span>' : ''}
+        </div>
+      </article>`).join('');
+  }).catch(() => {});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>爱好者社区 · 针语</title>
+<link rel="stylesheet" href="/assets/theme.css?v=3">
+</head>
+<body data-page="community">
+<main class="container">
+  <h1 class="page-title">爱好者社区</h1>
+  <p class="lead">分享练习、心得和作品，与其他绣友交流。</p>
+
+  <div class="card mt-5 mb-6">
+    <div class="filter-bar">
+      <select id="sort" class="select" aria-label="排序方式">
+        <option value="new">最新</option>
+        <option value="hot">最热</option>
+      </select>
+      <select id="stitch" class="select" aria-label="按针法筛选"><option value="">全部针法</option></select>
+      <input id="kwd" class="input" type="search" placeholder="搜索标题或标签" aria-label="搜索作品">
+    </div>
+    <div class="row-between mt-4">
+      <p class="hint" style="margin:0">发布后即公开展示；AI 辅助作品请注明创作方式。</p>
+      <button id="publish" class="btn btn-primary btn-sm">发布作品</button>
+    </div>
+  </div>
+
+  <div id="form-card" class="card mb-6" style="display:none">
+    <div class="field"><label>标题</label><input id="f-title" class="input" maxlength="60"></div>
+    <div class="field"><label>说明</label><textarea id="f-desc" class="textarea" maxlength="1000"></textarea></div>
+    <div class="grid-2">
+      <div class="field"><label>使用的针法（可留空）</label><select id="f-stitch" class="select"><option value="">不指定</option></select></div>
+      <div class="field"><label>创作方式</label><select id="f-type" class="select">
+        <option value="handmade">手工/传统创作</option><option value="ai_assisted">AI 辅助生成后开绣</option></select></div>
+    </div>
+    <div class="field"><label>标签（空格分隔）</label><input id="f-tags" class="input" placeholder="掺针 渐变 练习"></div>
+    <div class="row gap-2 mt-4">
+      <button id="f-submit" class="btn btn-primary">提交</button>
+      <button id="f-cancel" class="btn btn-ghost">取消</button>
+      <span class="small muted" id="f-tip"></span>
+    </div>
+  </div>
+
+  <div class="grid-auto" id="list"></div>
+  <div id="empty" class="empty mt-6" style="display:none">没有匹配的作品，换个关键词或清空筛选试试。</div>
+</main>
+
+<script src="/assets/app.js?v=3"></script>
+<script>
+(function () {
+  const { api, esc, toast, reviewBadge } = window.ZY;
+  window.ZY.renderChrome('/community');
+
+  const listEl = document.getElementById('list');
+  const stitchSel = document.getElementById('stitch');
+  const formStitch = document.getElementById('f-stitch');
+
+  api.get('/stitches').then(d => {
+    const opts = d.items.map(s => `<option value="${esc(s.code)}">${esc(s.name)}</option>`).join('');
+    stitchSel.innerHTML = '<option value="">全部针法</option>' + opts;
+    formStitch.innerHTML = '<option value="">不指定</option>' + opts;
+  }).catch(() => {});
+
+  function load() {
+    listEl.innerHTML = Array.from({length: 3}).map(() => '<div class="card"><div class="skel" style="height:150px"></div></div>').join('');
+    api.get('/works', {
+      sort: document.getElementById('sort').value,
+      stitch: stitchSel.value,
+      q: document.getElementById('kwd').value,
+      limit: 30
+    }).then(d => {
+      document.getElementById('empty').style.display = d.items.length ? 'none' : 'block';
+      listEl.innerHTML = d.items.map(w => `
+        <article class="card card--hover">
+          <div class="cover-strip" style="background:${esc(w.cover)}"></div>
+          <div class="row-between row-top">
+            <h3 class="card-title" style="flex:1">${esc(w.title)}</h3>
+            ${reviewBadge(w.review_status)}
+          </div>
+          <p class="card-body mt-2">${esc(w.description)}</p>
+          <div class="row small muted gap-2 row-wrap mt-3">
+            <span>${esc(w.nickname)}</span>
+            ${w.is_seed ? '<span class="badge badge-seed">示例</span>' : ''}
+            ${w.source_type === 'ai_assisted' ? '<span class="badge badge-ai">AI 辅助</span>' : ''}
+          </div>
+          <div class="row gap-2 mt-4">
+            <button class="btn ${w.liked ? 'btn-primary' : 'btn-ghost'} btn-sm" data-like="${w.id}"
+                    aria-pressed="${w.liked ? 'true' : 'false'}">♡ ${w.like_count}</button>
+            <button class="btn ${w.faved ? 'btn-primary' : 'btn-ghost'} btn-sm" data-fav="${w.id}"
+                    aria-pressed="${w.faved ? 'true' : 'false'}">☆ ${w.fav_count}</button>
+            <span class="tiny muted">评论 ${w.comment_count}</span>
+          </div>
+        </article>`).join('');
+      bindActions();
+    }).catch(e => toast(e.message, 'error'));
+  }
+
+  function bindActions() {
+    const toggle = (kind, id, btn) => {
+      api.post('/works/' + id + '/toggle', { kind }).then(r => {
+        btn.className = 'btn ' + (r.active ? 'btn-primary' : 'btn-ghost') + ' btn-sm';
+        if (kind === 'like') btn.textContent = '♡ ' + r.like_count;
+        else btn.textContent = '☆ ' + r.fav_count;
+      }).catch(e => toast(e.message, 'error'));
+    };
+    listEl.querySelectorAll('[data-like]').forEach(b => b.addEventListener('click', () => toggle('like', b.getAttribute('data-like'), b)));
+    listEl.querySelectorAll('[data-fav]').forEach(b => b.addEventListener('click', () => toggle('fav', b.getAttribute('data-fav'), b)));
+  }
+
+  document.getElementById('publish').addEventListener('click', () => {
+    if (!api.isLogin()) { toast('发布作品需要先登录', 'error'); location.href = '/me'; return; }
+    const c = document.getElementById('form-card');
+    c.style.display = c.style.display === 'none' ? 'block' : 'none';
+    c.scrollIntoView({ behavior: 'smooth' });
+  });
+  document.getElementById('f-cancel').addEventListener('click', () => {
+    document.getElementById('form-card').style.display = 'none';
+  });
+  document.getElementById('f-submit').addEventListener('click', () => {
+    const payload = {
+      title: document.getElementById('f-title').value.trim(),
+      description: document.getElementById('f-desc').value.trim(),
+      tags: document.getElementById('f-tags').value.trim(),
+      stitch_code: formStitch.value || null,
+      source_type: document.getElementById('f-type').value
+    };
+    if (!payload.title) { toast('标题不能为空', 'error'); return; }
+    api.post('/works', payload).then(() => {
+      toast('发布成功，已获得积分', 'success');
+      document.getElementById('form-card').style.display = 'none';
+      ['f-title', 'f-desc', 'f-tags'].forEach(id => document.getElementById(id).value = '');
+      load();
+    }).catch(e => toast(e.message, 'error'));
+  });
+
+  ['sort', 'stitch'].forEach(id => document.getElementById(id).addEventListener('change', load));
+  let timer; document.getElementById('kwd').addEventListener('input', () => {
+    clearTimeout(timer); timer = setTimeout(load, 320);
+  });
+  load();
+})();
+</script>
+</body>
+</html>

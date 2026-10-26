@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "note": "示例作品：封面为纯色（不引用任何未经授权的第三方图片），is_seed=true，全部 review_status=pending_expert。",
+  "users": [
+    {"email": "demo@zhenyu.dev", "nickname": "示例绣友", "password": "zhenyu123", "role": "user", "points": 120},
+    {"email": "reviewer@zhenyu.dev", "nickname": "湘绣顾问", "password": "zhenyu123", "role": "reviewer", "points": 0},
+    {"email": "admin@zhenyu.dev", "nickname": "平台管理员", "password": "zhenyu123", "role": "admin", "points": 0}
+  ],
+  "works": [
+    {"title": "练习：鬅毛针的毛发分层", "description": "第三次重做。这次把每一层的走向都错开了，边缘碎毛单独用最细的一丝梳理，终于不像贴纸了。", "tags": "鬅毛针 练习 虎", "stitch_code": "pengmao", "cover": "#b22222", "like_count": 42, "fav_count": 18, "comment_count": 7, "source_type": "handmade", "is_featured": true},
+    {"title": "掺针渐变：从深红到月白", "description": "为了练掺针专门加了两个中间色阶，画面比上一次干净很多。中间有一段还是能看出界线。", "tags": "掺针 渐变 练习", "stitch_code": "canzhen", "cover": "#c05a54", "like_count": 31, "fav_count": 12, "comment_count": 4, "source_type": "handmade"},
+    {"title": "游针草稿：水波纹", "description": "弧度大的地方缩短针脚之后线条圆顺多了，但收紧力度还是不均。", "tags": "游针 线条", "stitch_code": "youzhen", "cover": "#2f6f4e", "like_count": 18, "fav_count": 6, "comment_count": 3, "source_type": "handmade"},
+    {"title": "打籽小花：一颗颗数着来", "description": "花心用了打籽，和花瓣的光面形成对比。颗粒大小还不够均匀。", "tags": "打籽针 花", "stitch_code": "dazizhen", "cover": "#c8a04a", "like_count": 25, "fav_count": 9, "comment_count": 5, "source_type": "handmade"},
+    {"title": "AI 辅助：牡丹构想图", "description": "先用平台生成效果图沟通概念和配色，再决定要不要真的开绣。图上带有「AI 效果示意」标识。", "tags": "AI辅助 牡丹 构图", "stitch_code": "canzhen", "cover": "#7c589e", "like_count": 36, "fav_count": 21, "comment_count": 11, "source_type": "ai_assisted", "is_featured": true},
+    {"title": "齐针铺底练习", "description": "纯粹在练排线均匀。远看还行，近看边缘不够齐，继续练。", "tags": "齐针 基础", "stitch_code": "qizhen", "cover": "#426a82", "like_count": 12, "fav_count": 3, "comment_count": 2, "source_type": "handmade"},
+    {"title": "网绣底：鳞片纹", "description": "网格打了两遍才对齐，第二遍用粉线先定格果然好很多。", "tags": "网绣 底纹", "stitch_code": "wangxiu", "cover": "#5b6b8a", "like_count": 14, "fav_count": 5, "comment_count": 1, "source_type": "handmade"},
+    {"title": "钉线绣：金线勾边", "description": "转角钉距缩短之后粗线服帖了，第一次没发出溢胶一样的浮起。", "tags": "钉线绣 勾边", "stitch_code": "dingxian", "cover": "#c8a04a", "like_count": 20, "fav_count": 8, "comment_count": 3, "source_type": "handmade"},
+    {"title": "第一次上绷记录", "description": "把四面受力弄均匀花了比下针更长的时间，但后面确实好绣多了。", "tags": "上绷 新手", "stitch_code": "", "cover": "#3f7a5e", "like_count": 9, "fav_count": 2, "comment_count": 6, "source_type": "handmade"},
+    {"title": "失败案例：色阶跳太快", "description": "只有两个颜色就直接相邻，掺针也救不回来。发出来给新手避坑。", "tags": "踩坑 配色", "stitch_code": "canzhen", "cover": "#8a5a3c", "like_count": 47, "fav_count": 26, "comment_count": 13, "source_type": "handmade", "is_featured": true}
+  ]
+}
